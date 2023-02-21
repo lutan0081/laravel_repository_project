@@ -25,10 +25,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // ログイン実行関数
         $request->authenticate();
 
+        // セッション再度生成
         $request->session()->regenerate();
 
+        // リダイレクト先
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,3 +30,14 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// ホーム画面の処理
+Route::group(['prefix' => 'home', 'as' => 'home'], function () {
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('/', [HomeController::class, 'show'])->name('');
+        Route::get('index', [HomeController::class, 'index'])->name('.index');
+        Route::get('showEdit/{id}', [HomeController::class, 'showEdit'])->name('.showEdit');
+        Route::post('entry', [HomeController::class, 'entry'])->name('.entry');
+        Route::get('delete/{id}', [HomeController::class, 'delete'])->name('.delete');
+    });
+});
