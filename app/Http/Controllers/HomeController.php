@@ -45,6 +45,7 @@ class HomeController extends Controller
 
         $user_list = [];
         $user_list = $this->homeRepository->getAll();
+        dd($user_list);
 
 
         return view('backend.home')->with([

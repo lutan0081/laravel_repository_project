@@ -7,6 +7,7 @@ use App\Models\Backend\Home;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Backend\HomeRequest;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class HomeRepository implements HomeRepositoryInterface 
 {
@@ -38,7 +39,10 @@ class HomeRepository implements HomeRepositoryInterface
      */
     public function getAll() 
     {
-        return Home::all();
+        $lists = Home::paginate(5);
+        return $lists;
+    
+        // return Home::all();
         // dd(Home::pagenate(20));
         // return Home::pagenate(20);
     }
