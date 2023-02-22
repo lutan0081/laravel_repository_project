@@ -39,8 +39,7 @@ class HomeRepository implements HomeRepositoryInterface
      */
     public function getAll() 
     {
-        $lists = Home::paginate(5);
-        return $lists;
+        return Home::paginate(5);
     
         // return Home::all();
         // dd(Home::pagenate(20));

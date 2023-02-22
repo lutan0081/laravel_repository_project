@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SlackController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,7 @@ require __DIR__.'/auth.php';
 
 // ホーム画面の処理
 Route::group(['prefix' => 'home', 'as' => 'home'], function () {
+    // home
     Route::group(['middleware' => 'auth'], function(){
         Route::get('/', [HomeController::class, 'show'])->name('');
         Route::get('index', [HomeController::class, 'index'])->name('.index');
@@ -41,3 +44,19 @@ Route::group(['prefix' => 'home', 'as' => 'home'], function () {
         Route::get('delete/{id}', [HomeController::class, 'delete'])->name('.delete');
     });
 });
+
+// slack
+Route::group(['prefix' => 'slack', 'as' => 'slack'], function () {
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('/', [SlackController::class, 'show'])->name('');
+        Route::post('sendSlackNotification', [SlackController::class, 'sendSlackNotification'])->name('.sendSlackNotification');
+    });
+}); 
+
+// mail
+Route::group(['prefix' => 'mail', 'as' => 'mail'], function () {
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('/', [MailController::class, 'show'])->name('');
+        Route::post('emailSend', [MailController::class, 'emailSend'])->name('.emailSend');
+    });
+}); 
