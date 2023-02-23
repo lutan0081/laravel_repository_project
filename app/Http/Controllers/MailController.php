@@ -35,8 +35,7 @@ class MailController extends Controller
 
         $this->emailRepository->sendEmail($request);
 
-        dd('送信完了');
-
-        return view('welcome');
+        session()->flash('flash_message', '送信が完了しました');
+        return redirect('home');
     }
 }

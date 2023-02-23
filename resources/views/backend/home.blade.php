@@ -26,7 +26,6 @@
                             <div class="grid grid-cols-2 text-black">
 
                                 <div class="grid grid-cols-1 px-5 text-black">
-
                                     <div class="bg-100">
                                         <div class="grid grid-cols-1">
                                             <div class="mb-6">
@@ -91,6 +90,20 @@
                                         <div class="grid grid-cols-2">
                                             <div class="mb-6">
                                                 <input type="hidden" id="id" name="id" value="{{$edit_list->id}}" class="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="bg-100">
+                                        <div class="grid grid-cols-2">
+                                            <div class="mb-6">
+                                                @if (session('flash_message'))
+                                                    <div class="flash_message">
+                                                        <label for="fax" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ session('flash_message') }}</label>
+                                                        
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

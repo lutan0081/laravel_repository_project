@@ -27,6 +27,7 @@ class SlackNotification extends Notification
         $this->icon = config('slack.icon');
         $this->name = config('slack.sender_name');
         $this->message = $message;
+
     }
 
     /**
@@ -76,6 +77,14 @@ class SlackNotification extends Notification
             ->from($this->name)
             ->image($this->icon)
             ->to($this->channel)
-            ->content($this->message);
+            ->content('エラーが検出されました。')
+            // ->content($this->message);
+            ->attachment(function ($attachment) {
+                $attachment
+                    ->title('プロジェクト: '. config('app.name', 'Laravel'))
+                    ->fields([
+                        'メッセージ: ' => $this->message,
+                    ]);
+            });
     }
 }

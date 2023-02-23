@@ -7,10 +7,29 @@ use App\Models\Backend\Home;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Backend\HomeRequest;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+// slack
+use App\Interfaces\Backend\SlackNotificationServiceInterface;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\SlackNotification;
 
-class HomeRepository implements HomeRepositoryInterface 
+/**
+ * 多重継承
+ */
+class HomeRepository implements HomeRepositoryInterface, SlackNotificationServiceInterface 
 {
+    use Notifiable;
+
+    public function send($message)
+    {   
+        $this->notify(new SlackNotification($message->getMessage()));
+    }
+
+    // ??このクラスを別にしてsend()だけ宣言で実行したい
+    // slackのurlを取得
+    public function routeNotificationForSlack()
+    {
+        return config('slack.webhook_url');
+    }
 
     /**
      * ダミークラスの作成
@@ -57,22 +76,35 @@ class HomeRepository implements HomeRepositoryInterface
     /**
      * 登録分岐
      */
-    // 引数でクラス指定は必要か??
     public function tryEntry(HomeRequest $request){
-        Log::debug('start:' .__FUNCTION__);
 
-        // バリデーション
-        $validated = $request->validated();
+        try{
+            Log::debug('start:' .__FUNCTION__);
 
-        $id = $request->input('id');
+            // バリデーション
+            $validated = $request->validated();
+    
+            $id = $request->input('id');
+    
+            if($id == ''){
+    
+                return $this->create($request);
+    
+            }else{
+    
+                return $this->update($id, $request);
+    
+            }
+        }catch(\Exception $e){
 
-        if($id == ''){
+            Log::debug('error:' .$e);
 
-            return $this->create($request);
+            // dd($e);
 
-        }else{
+            // slack
+            $this->send($e);
 
-            return $this->update($id, $request);
+            // mail送信
 
         }
     }
@@ -101,18 +133,22 @@ class HomeRepository implements HomeRepositoryInterface
      */
     private function update($id, $request) 
     {
-        Log::debug('start:' .__FUNCTION__);
-        $result = Str::random(10);
-        $email = $result. '@gmail.com';
-
-        return Home::where('id', '=', $id)->update([
-            'name' => $request->name,
-            'email' => $email,
-            'post_number' => $request->post_number,
-            'address' => $request->address,
-            'tel' => $request->tel,
-            'fax' => $request->fax,
-        ]);
+        try{
+            Log::debug('start:' .__FUNCTION__);
+            $result = Str::random(10);
+            $email = $result. '@gmail.com';
+    
+            return Home::where('id', '=', $id)->update([
+                'name' => $request->name,
+                'email' => $email,
+                'post_number' => $request->post_number,
+                'address' => $request->address,
+                'aaaaa' => $request->tel,
+                'fax' => $request->fax,
+            ]);
+        }catch(\Exception $e){
+            throw $e;
+        }
     }
 
     /**
